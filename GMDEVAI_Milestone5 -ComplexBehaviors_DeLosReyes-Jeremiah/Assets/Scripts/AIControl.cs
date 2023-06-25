@@ -13,7 +13,7 @@ public class AIControl : MonoBehaviour
     }
 
     [SerializeField] private AgentBehavior _agentBehavior;
-    private bool _isInRange = false;
+    private const float _detectionRadius = 15.0f;
 
     private NavMeshAgent _agent;
     private Vector3 _wanderTarget;
@@ -41,25 +41,19 @@ public class AIControl : MonoBehaviour
         UpdateAgentBehavior();
     }
 
-    private void OnTriggerEnter(Collider other)
+    private bool InRange()
     {
-        if (other == _target.GetComponent<Collider>())
+        if (Vector3.Distance(transform.position, _target.transform.position) < _detectionRadius)
         {
-            _isInRange = true;
+            return true;
         }
-    }
 
-    private void OnTriggerExit(Collider other)
-    {
-        if (other == _target.GetComponent<Collider>())
-        {
-            _isInRange = false;
-        }
+        return false;
     }
 
     private void UpdateAgentBehavior()
     {
-        if (_isInRange)
+        if (InRange())
         {
             switch (_agentBehavior)
             {
